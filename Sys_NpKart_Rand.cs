@@ -23,7 +23,7 @@ public partial class Sys_NpKart_Rand : SystemBase
             float3 selfPos= transpect.WorldPosition;
             float3 vel= npKart.ValueRW.velocity;
             float speed= npKart.ValueRW.speed;
-            float randomness= npKart.ValueRW.randomness+1;
+            float randomness= npKart.ValueRW.randomness+0.0000000001f;
             float3 randRange= new float3(1,0,1)*200;
             float3 randPos= rand.NextFloat3(selfPos-randRange, selfPos+randRange);
             float3 distVector= (randPos- selfPos);
