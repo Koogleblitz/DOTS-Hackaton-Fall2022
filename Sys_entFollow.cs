@@ -32,7 +32,7 @@ namespace MC.DOTS_Primer
     public partial class Sys_entFollow : SystemBase
     {
         public GameObject obj_car;
-        public float speedMultiplier;
+
 
 
         //[+] C_speed is a ICmpt attached to entities
@@ -60,7 +60,7 @@ namespace MC.DOTS_Primer
 
 
 
-            //[+]---------------------------------------
+            //[+]-----------------------------------------------------------------------------------
             float3 sigmaPos= float3.zero;
             float3 sigmaVel= float3.zero;
             foreach ((TransformAspect transpect, RefRW<Cmpt_NpKart> entCar) in SystemAPI.Query<TransformAspect, RefRW<Cmpt_NpKart>>()){
@@ -79,6 +79,7 @@ namespace MC.DOTS_Primer
                 float3 selfPos = transpect.WorldPosition;
                 float3 velocity= entCar.ValueRW.velocity;
                 float radar = entCar.ValueRW.radar;
+                
 
                 float radius=  (math.distance(selfPos, centroid))+ 0.000001f;
                 float displacement= math.distance(selfPos, float3.zero);
@@ -101,31 +102,71 @@ namespace MC.DOTS_Primer
     }
 
 
-
-
-
-
     // [+] typeof(<ICombonent tag>)
     [BurstCompile]
     [WithAll(typeof(Cmpt_NpKart))]
+    
     public partial struct BasicMoveJob : IJobEntity
     {
         public float3 objPos;
         public float DeltaTime;
 
         [BurstCompile]
-        // private void Execute(ref LocalTransform transform, in Cmpt_NpKart entCar)
-        private void Execute(ref TransformAspect transpect, in Cmpt_NpKart entCar)
-        {
+        private void Execute(ref TransformAspect transpect, in Cmpt_NpKart entCar){
+            // private void Execute(ref LocalTransform transform, in Cmpt_NpKart entCar)
+            float followWeight = entCar.followWeight;
             var currentPos = transpect.WorldPosition;
+            float radar = entCar.radar;
+            float socialDistance= entCar.socialDistance;
             if (math.distance(currentPos, objPos) < 1.5f) return;
 
+            var distanceFromObj= math.distance(currentPos, objPos);
+            if ( distanceFromObj< socialDistance) return;
+
             var targetDir = math.normalize(objPos - currentPos);
-            var newPos = currentPos - (targetDir * (entCar.speed * DeltaTime))*3.2f;
+            var newPos = currentPos + (targetDir * entCar.speed * DeltaTime * followWeight);
 
             transpect.WorldPosition = newPos;
-            transpect.LookAt(newPos-currentPos );
+            transpect.LookAt(currentPos-newPos );
         }
+        
+        // private void ExecuteFollowObj(ref TransformAspect transpect, in Cmpt_NpKart entCar){
+        //     // private void Execute(ref LocalTransform transform, in Cmpt_NpKart entCar)
+        //     float followWeight = entCar.followWeight;
+        //     var currentPos = transpect.WorldPosition;
+        //     float radar = entCar.radar;
+        //     float socialDistance= entCar.socialDistance;
+
+        //     var distanceFromObj= math.distance(currentPos, objPos);
+        //     if ( distanceFromObj< socialDistance) return;
+
+        //     var targetDir = math.normalize(objPos - currentPos);
+        //     var newPos = currentPos + (targetDir * entCar.speed * DeltaTime * followWeight);
+
+        //     transpect.WorldPosition = newPos;
+        //     transpect.LookAt(currentPos-newPos );
+        // }
+
+        //[:+:] -------------------------------------------------------------------------------
+        private void separation(ref LocalTransform transform, in Cmpt_NpKart entCar){
+            var selfPos = transform.Position;
+            foreach ((TransformAspect transpect, RefRW<Cmpt_NpKart> entCar2) in SystemAPI.Query<TransformAspect, RefRW<Cmpt_NpKart>>()){
+                var otherPos= transpect.WorldPosition;
+                float socialDistance= entCar.socialDistance;
+                float repulsion= entCar.repulsion;
+                var distFromOther= math.distance(selfPos, otherPos);
+
+                var otherDir= math.normalize(otherPos - selfPos);
+
+                if(distFromOther<socialDistance){
+                    transpect.WorldPosition += (otherDir * entCar.speed * DeltaTime * repulsion);
+                }
+
+
+            }
+
+        }
+        // //[:+:] -------------------------------------------------------------------------------
     }
 
 }

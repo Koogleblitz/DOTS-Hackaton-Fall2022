@@ -8,6 +8,7 @@ public partial class Sys_NpKart_Rand : SystemBase
     
     uint popCap= 100;
     uint cnt= 1;
+    public uint cntLimit= 1000;
 
 
     protected override void OnUpdate(){
@@ -33,7 +34,7 @@ public partial class Sys_NpKart_Rand : SystemBase
             transpect.LookAt(selfPos+distVector );
         }
         
-        cnt= (cnt>0)? cnt-1 : 0;
+        cnt= (cnt<=cntLimit)? cnt+1 : 0;
 
         // UnityEngine.Debug.Log(cnt);
 

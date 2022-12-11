@@ -390,9 +390,9 @@ MonoBehaviour:
   separationWeight: 1.25
   alignmentWeight: 30
   originGravity: 1
-  boundary: 180
+  boundary: 12
   origin: {x: 0, y: 0, z: 0}
-  speedMultiplier: 2
+  speedMultiplier: 1.5
   cntLimit: 100
 --- !u!1 &1490453954921826637
 GameObject:
