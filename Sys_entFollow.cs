@@ -79,6 +79,8 @@ namespace MC.DOTS_Primer
                 float3 selfPos = transpect.WorldPosition;
                 float3 velocity= entCar.ValueRW.velocity;
                 float radar = entCar.ValueRW.radar;
+                float attraction = entCar.ValueRO.attraction;
+                float repulsion = entCar.ValueRO.repulsion;
                 
 
                 float radius=  (math.distance(selfPos, centroid))+ 0.000001f;
@@ -86,15 +88,18 @@ namespace MC.DOTS_Primer
                 float3 direction= math.normalize(selfPos);
 
 
-                entCar.ValueRW.velocity+= centroid * (radius/radar) ;
-                entCar.ValueRW.velocity-= centroid * (radar/radius) ;
+                velocity+= centroid * (radius/radar) * attraction ;
+                velocity-= centroid * (radar/radius) * repulsion;
 
                 if(math.length(entCar.ValueRW.velocity)>speedLimit){
                     entCar.ValueRW.velocity= math.normalize(entCar.ValueRW.velocity)* speedLimit;
                 }
+                if(math.length(velocity+entCar.ValueRW.velocity)>speedLimit){
+                    velocity= float3.zero;
+                }
 
-                transpect.WorldPosition-= entCar.ValueRW.velocity*deltaTime*speed;
-                transpect.LookAt(entCar.ValueRW.velocity);
+                transpect.WorldPosition+= velocity*deltaTime*speed;
+                transpect.LookAt(selfPos+ velocity);
 
             }
         
@@ -118,55 +123,58 @@ namespace MC.DOTS_Primer
             var currentPos = transpect.WorldPosition;
             float radar = entCar.radar;
             float socialDistance= entCar.socialDistance;
-            if (math.distance(currentPos, objPos) < 1.5f) return;
-
+            float repulsion= entCar.repulsion;
             var distanceFromObj= math.distance(currentPos, objPos);
-            if ( distanceFromObj< socialDistance) return;
-
             var targetDir = math.normalize(objPos - currentPos);
-            var newPos = currentPos + (targetDir * entCar.speed * DeltaTime * followWeight);
+            float3 velocity= entCar.velocity;
+            float speed= entCar.speed;
+            float speedLimit= entCar.speedLimit;
 
-            transpect.WorldPosition = newPos;
-            transpect.LookAt(currentPos-newPos );
-        }
-        
-        // private void ExecuteFollowObj(ref TransformAspect transpect, in Cmpt_NpKart entCar){
-        //     // private void Execute(ref LocalTransform transform, in Cmpt_NpKart entCar)
-        //     float followWeight = entCar.followWeight;
-        //     var currentPos = transpect.WorldPosition;
-        //     float radar = entCar.radar;
-        //     float socialDistance= entCar.socialDistance;
-
-        //     var distanceFromObj= math.distance(currentPos, objPos);
-        //     if ( distanceFromObj< socialDistance) return;
-
-        //     var targetDir = math.normalize(objPos - currentPos);
-        //     var newPos = currentPos + (targetDir * entCar.speed * DeltaTime * followWeight);
-
-        //     transpect.WorldPosition = newPos;
-        //     transpect.LookAt(currentPos-newPos );
-        // }
-
-        //[:+:] -------------------------------------------------------------------------------
-        private void separation(ref LocalTransform transform, in Cmpt_NpKart entCar){
-            var selfPos = transform.Position;
-            foreach ((TransformAspect transpect, RefRW<Cmpt_NpKart> entCar2) in SystemAPI.Query<TransformAspect, RefRW<Cmpt_NpKart>>()){
-                var otherPos= transpect.WorldPosition;
-                float socialDistance= entCar.socialDistance;
-                float repulsion= entCar.repulsion;
-                var distFromOther= math.distance(selfPos, otherPos);
-
-                var otherDir= math.normalize(otherPos - selfPos);
-
-                if(distFromOther<socialDistance){
-                    transpect.WorldPosition += (otherDir * entCar.speed * DeltaTime * repulsion);
-                }
+            if (distanceFromObj < socialDistance) return;
 
 
+
+            
+            // if ( distanceFromObj< socialDistance){
+            //     velocity-= (targetDir* entCar.speed * DeltaTime )*(socialDistance/distanceFromObj)* repulsion;
+            // }
+
+            
+            velocity+= (targetDir  )*(distanceFromObj/radar)* followWeight;
+            // var newPos = currentPos + (targetDir * entCar.speed * DeltaTime )*(distanceFromObj/radar)* followWeight;
+
+            if(math.length(entCar.velocity)>=speedLimit){
+                velocity= 0;
             }
 
+            transpect.WorldPosition += velocity* DeltaTime* speed;
+            transpect.LookAt(currentPos+velocity );
         }
-        // //[:+:] -------------------------------------------------------------------------------
+        
+
+
+        //[:+:] -------------------------------------------------------------------------------
+        // [BurstCompile]
+        // private void separation(ref LocalTransform transform, in Cmpt_NpKart entCar){
+        //     var selfPos = transform.Position;
+        //     foreach ((TransformAspect transpect, RefRW<Cmpt_NpKart> entCar2) in SystemAPI.Query<TransformAspect, RefRW<Cmpt_NpKart>>()){
+        //         var otherPos= transpect.WorldPosition;
+
+        //         float socialDistance= entCar.socialDistance;
+        //         float repulsion= entCar.repulsion;
+        //         var distanceBedtween= math.distance(selfPos, otherPos);
+
+        //         var otherDir= math.normalize(otherPos - selfPos);
+
+        //         if(distanceBedtween<socialDistance){
+        //             transform.Position+= (otherDir * entCar.speed * DeltaTime )*(socialDistance/distanceBedtween)* repulsion;
+        //         }
+
+
+        //     }
+
+        // }
+        // // //[:+:] -------------------------------------------------------------------------------
     }
 
 }

@@ -465,22 +465,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fd09331ff84190408dffb0ea967c8eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clusterGrav: 2.5
-  repulsion: 5
+  attraction: 0
+  repulsion: 2
   socialDistance: 5
   groupVelocity: 1
   boundary: 180
   towardsPlayer: 1
   radar: 9
-  speedLimit: 9
-  speed: 7
+  speedLimit: 5
+  speed: 5
   position:
     x: 0
     y: 0
     z: 0
   velocity:
     x: 1
-    y: 1
+    y: 0
     z: 1
   step: 1
   targetPos:
@@ -488,4 +488,4 @@ MonoBehaviour:
     y: 0
     z: 0
   randomness: 0.14
-  followWeight: 1.15
+  followWeight: 0.2

@@ -390,7 +390,7 @@ MonoBehaviour:
   separationWeight: 1.25
   alignmentWeight: 30
   originGravity: 1
-  boundary: 12
+  boundary: 170
   origin: {x: 0, y: 0, z: 0}
   speedMultiplier: 1.5
   cntLimit: 100

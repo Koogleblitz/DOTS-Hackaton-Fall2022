@@ -3,7 +3,7 @@ using Unity.Mathematics;
 
 public struct Cmpt_NpKart : IComponentData
 {
-    public float clusterGrav;
+    public float attraction;
     public float repulsion;
     public float socialDistance;
     public float groupVelocity;

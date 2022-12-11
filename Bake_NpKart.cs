@@ -7,7 +7,7 @@ using Unity.Mathematics;
 public class Bake_NpKart : MonoBehaviour
 {
 
-    public float clusterGrav;
+    public float attraction;
     public float repulsion;
     public float socialDistance;
     public float groupVelocity;
@@ -38,7 +38,7 @@ public class NpKartBaker: Baker<Bake_NpKart>
 
         AddComponent(new Cmpt_NpKart
         {
-            clusterGrav = author.clusterGrav,
+            attraction = author.attraction,
             repulsion = author.repulsion,
             socialDistance= author.socialDistance,
             groupVelocity= author.groupVelocity,
