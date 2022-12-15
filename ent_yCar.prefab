@@ -465,15 +465,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fd09331ff84190408dffb0ea967c8eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attraction: 3
+  attraction: 1
   repulsion: 1
   socialDistance: 5
-  groupVelocity: 1
+  peerPressure: 100
   boundary: 180
   towardsPlayer: 1
-  radar: 9
-  speedLimit: 9
-  speed: 9
+  radar: 7
+  speedLimit: 5
+  speed: 5
   position:
     x: 0
     y: 0
@@ -487,5 +487,5 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
-  randomness: 0.7
-  followWeight: 10
+  randomness: 1
+  followWeight: 25

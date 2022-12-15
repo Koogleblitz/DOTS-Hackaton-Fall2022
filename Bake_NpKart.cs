@@ -10,7 +10,7 @@ public class Bake_NpKart : MonoBehaviour
     public float attraction;
     public float repulsion;
     public float socialDistance;
-    public float groupVelocity;
+    public float peerPressure;
     public float boundary;
     public float towardsPlayer;
     public float radar;
@@ -41,7 +41,7 @@ public class NpKartBaker: Baker<Bake_NpKart>
             attraction = author.attraction,
             repulsion = author.repulsion,
             socialDistance= author.socialDistance,
-            groupVelocity= author.groupVelocity,
+            peerPressure= author.peerPressure,
             boundary = author.boundary,
             towardsPlayer= author.towardsPlayer,
             radar= author.radar,

@@ -32,6 +32,7 @@ namespace MC.DOTS_Primer
     public partial class Sys_entFollow : SystemBase
     {
         public GameObject obj_car;
+        public GameObject player;
 
 
 
@@ -46,16 +47,22 @@ namespace MC.DOTS_Primer
             if (obj_car == null)
             {
                 obj_car = GameObject.FindWithTag("objCar");
+                player = GameObject.FindWithTag("Player");
                 if (obj_car == null) return;
             }
 
+
+
+
             float3 objPos = obj_car.transform.position;
+            float3 playerPos = player.transform.position;
             var deltaTime = SystemAPI.Time.DeltaTime;
 
             new BasicMoveJob
             {
                 objPos = objPos,
-                DeltaTime = deltaTime
+                DeltaTime = deltaTime,
+                playerPos = playerPos
             }.ScheduleParallel();
 
 
@@ -81,6 +88,7 @@ namespace MC.DOTS_Primer
                 float radar = entCar.ValueRW.radar;
                 float attraction = entCar.ValueRO.attraction;
                 float repulsion = entCar.ValueRO.repulsion;
+                float peerPressure = entCar.ValueRO.peerPressure;
                 
 
                 float radius=  (math.distance(selfPos, centroid))+ 0.000001f;
@@ -90,6 +98,7 @@ namespace MC.DOTS_Primer
 
                 velocity+= centroid * (radius/radar) * attraction ;
                 velocity-= centroid * (radar/radius) * repulsion;
+                velocity+= ((velocity+avgVel))* peerPressure;
 
                 if(math.length(entCar.ValueRW.velocity)>speedLimit){
                     entCar.ValueRW.velocity= math.normalize(entCar.ValueRW.velocity)* speedLimit;
@@ -113,6 +122,7 @@ namespace MC.DOTS_Primer
     public partial struct BasicMoveJob : IJobEntity
     {
         public float3 objPos;
+        public float3 playerPos;
         public float DeltaTime;
 
         [BurstCompile]
@@ -124,17 +134,19 @@ namespace MC.DOTS_Primer
             float socialDistance= entCar.socialDistance;
             float repulsion= entCar.repulsion;
             var distanceFromObj= math.distance(selfPos, objPos);
-            var targetDir = math.normalize(objPos - selfPos);
+            var distanceFromPlayer= math.distance(selfPos, playerPos);
+            var targetDir = math.normalize((objPos+playerPos)- selfPos);
             float3 velocity= entCar.velocity;
             float speed= entCar.speed;
             float speedLimit= entCar.speedLimit;
 
             if (distanceFromObj < socialDistance) return;
+            if (distanceFromPlayer < socialDistance) return;
             // if ( distanceFromObj< socialDistance){
             //     velocity-= (targetDir* entCar.speed * DeltaTime )*(socialDistance/distanceFromObj)* repulsion;
             // }
             
-            velocity+= (targetDir  )*(distanceFromObj/radar);
+            velocity+= (targetDir  )*(distanceFromPlayer/radar);
             // var newPos = selfPos + (targetDir * entCar.speed * DeltaTime )*(distanceFromObj/radar)* followWeight;
 
             if(math.length(velocity)>speedLimit){
