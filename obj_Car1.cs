@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Obj_car))]
-public class Obj_car : MonoBehaviour
+public class Obj_car1 : MonoBehaviour
 {
     private Obj_car car;
     public UnityEngine.Vector3 objVel;
@@ -42,7 +42,7 @@ public class Obj_car : MonoBehaviour
         var direction= selfPos.normalized;
         var displacement= (origin - selfPos).magnitude;
         var cars= FindObjectsOfType<Obj_car>();
-        var playerPos = GameObject.FindWithTag("giantEnemyCrab").transform.position;
+        var playerPos = GameObject.FindWithTag("Player").transform.position;
         var playerVector= (playerPos - selfPos);
         var playerDist= playerVector.magnitude;
 

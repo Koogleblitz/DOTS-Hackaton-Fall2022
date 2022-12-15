@@ -442,7 +442,7 @@ Transform:
   m_GameObject: {fileID: 5656510450171010736}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 18.34, y: 0, z: 6.63}
-  m_LocalScale: {x: 1.7, y: 1.7, z: 1.7}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5650328919247021682}
@@ -465,25 +465,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fd09331ff84190408dffb0ea967c8eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clusterGrav: 1
-  socialDistance: 1
-  groupVelocity: 1
-  boundary: 200
+  attraction: 1
+  repulsion: 1
+  socialDistance: 5
+  peerPressure: 100
+  boundary: 180
   towardsPlayer: 1
-  radar: 9
-  speedLimit: 9
-  speed: 7
+  radar: 7
+  speedLimit: 5
+  speed: 5
   position:
     x: 0
     y: 0
     z: 0
   velocity:
     x: 1
-    y: 1
+    y: 0
     z: 1
   step: 1
   targetPos:
     x: 0
     y: 0
     z: 0
-  randomness: 3
+  randomness: 1
+  followWeight: 25

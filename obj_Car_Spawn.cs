@@ -3,6 +3,7 @@ using UnityEngine;
 public class Obj_Car_Spawn : MonoBehaviour
 {
     public GameObject prefab;
+    public GameObject prefab2;
     public uint popCap;
     public uint randerosity;
     uint cnt= 0;
@@ -14,6 +15,11 @@ public class Obj_Car_Spawn : MonoBehaviour
 
         if(cnt<popCap){
             Instantiate(prefab, randPos, UnityEngine.Random.rotation);
+            
+        }
+        if(cnt<popCap){
+            Instantiate(prefab2, randPos, UnityEngine.Random.rotation);
+            
         }
         cnt= (cnt<popCap)? cnt+1 : popCap;
     }

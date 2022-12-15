@@ -7,9 +7,10 @@ using Unity.Mathematics;
 public class Bake_NpKart : MonoBehaviour
 {
 
-    public float clusterGrav;
+    public float attraction;
+    public float repulsion;
     public float socialDistance;
-    public float groupVelocity;
+    public float peerPressure;
     public float boundary;
     public float towardsPlayer;
     public float radar;
@@ -20,6 +21,7 @@ public class Bake_NpKart : MonoBehaviour
     public float step;
     public float3 targetPos;
     public float randomness;
+    public float followWeight;
 
 }
 
@@ -36,9 +38,10 @@ public class NpKartBaker: Baker<Bake_NpKart>
 
         AddComponent(new Cmpt_NpKart
         {
-            clusterGrav = author.clusterGrav,
+            attraction = author.attraction,
+            repulsion = author.repulsion,
             socialDistance= author.socialDistance,
-            groupVelocity= author.groupVelocity,
+            peerPressure= author.peerPressure,
             boundary = author.boundary,
             towardsPlayer= author.towardsPlayer,
             radar= author.radar,
@@ -49,6 +52,7 @@ public class NpKartBaker: Baker<Bake_NpKart>
             step= author.step,
             targetPos= author.targetPos,
             randomness= author.randomness,
+            followWeight= author.followWeight,
 
         }) ;
     }

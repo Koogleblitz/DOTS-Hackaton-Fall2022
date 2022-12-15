@@ -3,9 +3,10 @@ using Unity.Mathematics;
 
 public struct Cmpt_NpKart : IComponentData
 {
-    public float clusterGrav;
+    public float attraction;
+    public float repulsion;
     public float socialDistance;
-    public float groupVelocity;
+    public float peerPressure;
     public float boundary;
     public float towardsPlayer;
     public float radar;
@@ -16,5 +17,7 @@ public struct Cmpt_NpKart : IComponentData
     public float step;
     public float3 targetPos;
     public float randomness;
+    public float followWeight;
+
 
 }
